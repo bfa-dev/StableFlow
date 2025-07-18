@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/stableflow/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/stableflow/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/stableflow",
+  "projects": {
+    "api-gateway": {
+      "type": "application",
+      "root": "apps/api-gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/api-gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
+      }
+    },
+    "audit-service": {
+      "type": "application",
+      "root": "apps/audit-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/audit-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/audit-service/tsconfig.app.json"
+      }
+    },
+    "auth-service": {
+      "type": "application",
+      "root": "apps/auth-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/auth-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/auth-service/tsconfig.app.json"
+      }
+    },
+    "notification-service": {
+      "type": "application",
+      "root": "apps/notification-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/notification-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notification-service/tsconfig.app.json"
+      }
+    },
+    "stableflow": {
+      "type": "application",
+      "root": "apps/stableflow",
+      "entryFile": "main",
+      "sourceRoot": "apps/stableflow/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/stableflow/tsconfig.app.json"
+      }
+    },
+    "transaction-service": {
+      "type": "application",
+      "root": "apps/transaction-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/transaction-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/transaction-service/tsconfig.app.json"
+      }
+    },
+    "transaction-worker": {
+      "type": "application",
+      "root": "apps/transaction-worker",
+      "entryFile": "main",
+      "sourceRoot": "apps/transaction-worker/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/transaction-worker/tsconfig.app.json"
+      }
+    },
+    "wallet-service": {
+      "type": "application",
+      "root": "apps/wallet-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/wallet-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/wallet-service/tsconfig.app.json"
+      }
+    }
+  }
+}
