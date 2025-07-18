@@ -30,6 +30,16 @@ services:
     volumes:
       - mysql_transactions_data:/var/lib/mysql
 
+  mysql-worker:
+    image: mysql:8.0
+    ports:
+      - '3309:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: transaction_worker
+    volumes:
+      - mysql_worker_data:/var/lib/mysql
+
   mongodb:
     image: mongo
     ports:
@@ -76,8 +86,21 @@ services:
     build:
       context: .
       dockerfile: apps/transaction-worker/Dockerfile
+    ports:
+      - '3006:3006'
     depends_on:
+      - mysql-worker
       - kafka
+      - wallet-service
+      - transaction-service
+    environment:
+      - DB_HOST=mysql-worker
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_DATABASE=transaction_worker
+      - WALLET_SERVICE_URL=http://wallet-service:3002
+      - TRANSACTION_SERVICE_URL=http://transaction-service:3003
 
   transaction-service:
     build:
@@ -145,3 +168,4 @@ volumes:
   mysql_data:
   mysql_auth_data:
   mysql_transactions_data:
+  mysql_worker_data:

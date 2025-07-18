@@ -12,13 +12,13 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/stableflow/main",
-    "start:api-gateway": "nest start api-gateway --watch",
     "start:auth-service": "nest start auth-service --watch",
     "start:wallet-service": "nest start wallet-service --watch",
     "start:transaction-service": "nest start transaction-service --watch",
     "start:transaction-worker": "nest start transaction-worker --watch",
     "start:audit-service": "nest start audit-service --watch",
     "start:notification-service": "nest start notification-service --watch",
+    "start:api-gateway": "nest start api-gateway --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -32,6 +32,7 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
+    "@nestjs/mongoose": "^10.0.10",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.0",
@@ -39,16 +40,20 @@
     "@nestjs/typeorm": "^11.0.0",
     "@types/bcrypt": "^5.0.2",
     "@types/passport-jwt": "^4.0.1",
+    "@types/uuid": "^10.0.0",
     "axios": "^1.7.9",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
     "mysql2": "^3.14.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.25"
+    "typeorm": "^0.3.25",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -75,7 +80,8 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.20.0",
+    "webpack": "^5.100.2"
   },
   "jest": {
     "moduleFileExtensions": [
