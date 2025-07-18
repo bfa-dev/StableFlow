@@ -1,0 +1,121 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wallet
+  
+  mysql-auth:
+    image: mysql:8.0
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stableflow_auth
+  mongodb:
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - '9092:9092'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  notification-service:
+    build:
+      context: .
+      dockerfile: apps/notification-service/Dockerfile
+    ports:
+      - '3005:3005'
+
+  audit-service:
+    build:
+      context: .
+      dockerfile: apps/audit-service/Dockerfile
+    ports:
+      - '3004:3004'
+    depends_on:
+      - mongodb
+
+  transaction-worker:
+    build:
+      context: .
+      dockerfile: apps/transaction-worker/Dockerfile
+    depends_on:
+      - kafka
+
+  transaction-service:
+    build:
+      context: .
+      dockerfile: apps/transaction-service/Dockerfile
+    ports:
+      - '3003:3003'
+    depends_on:
+      - kafka
+
+  wallet-service:
+    build:
+      context: .
+      dockerfile: apps/wallet-service/Dockerfile
+    ports:
+      - '3002:3002'
+    depends_on:
+      - mysql
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_DATABASE=wallet
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+    ports:
+      - '3001:3001'
+    depends_on:
+      - mysql-auth
+    environment:
+      - DB_HOST=mysql-auth
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_DATABASE=stableflow_auth
+      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - auth-service
+      - wallet-service
+      - transaction-service
+      - audit-service
+      - notification-service
+
+volumes:
+  mongodb_data:
