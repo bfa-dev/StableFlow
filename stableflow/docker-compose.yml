@@ -7,6 +7,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wallet
+    volumes:
+      - mysql_data:/var/lib/mysql
   
   mysql-auth:
     image: mysql:8.0
@@ -15,6 +17,19 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: stableflow_auth
+    volumes:
+      - mysql_auth_data:/var/lib/mysql
+
+  mysql-transactions:
+    image: mysql:8.0
+    ports:
+      - '3308:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: transactions
+    volumes:
+      - mysql_transactions_data:/var/lib/mysql
+
   mongodb:
     image: mongo
     ports:
@@ -71,7 +86,15 @@ services:
     ports:
       - '3003:3003'
     depends_on:
+      - mysql-transactions
       - kafka
+    environment:
+      - DB_HOST=mysql-transactions
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_DATABASE=transactions
+      - WALLET_SERVICE_URL=http://wallet-service:3002
 
   wallet-service:
     build:
@@ -119,3 +142,6 @@ services:
 
 volumes:
   mongodb_data:
+  mysql_data:
+  mysql_auth_data:
+  mysql_transactions_data:
